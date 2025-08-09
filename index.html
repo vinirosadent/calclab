@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CalcLab • Módulo 1 — Álgebra & Funções (Tutor PRO)</title>
+<meta name="description" content="Curso interativo em PT-BR, do zero ao cálculo. Módulo 1 cobre Álgebra aplicada e Funções com explicações, gráficos anotados, exercícios interativos, dicas graduais e soluções.">
+<!-- MathJax configuration and loader -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  :root {
+    --bg:#f6f7fb; --panel:#fff; --ink:#0b1220; --muted:#475569; --border:#e5e7eb; --accent:#4f46e5;
+    --ok:#065f46; --bad:#9f1239; --warn:#854d0e; --subtle:#eef2ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+       color:var(--ink); background:linear-gradient(180deg,#f8fafc, #eef2ff)}
+  header{position:sticky;top:0;background:#ffffffcc;backdrop-filter:blur(8px);
+         border-bottom:1px solid var(--border); z-index:10}
+  .wrap{max-width:1200px;margin:0 auto;padding:12px 16px;display:flex;gap:12px;align-items:center}
+  h1{font-size:20px;margin:0;letter-spacing:0.2px}
+  .tag{font-size:12px;background:#e0e7ff;color:#3730a3;border-radius:999px;padding:4px 10px}
+  main{max-width:1200px;margin:0 auto;padding:20px 16px 40px;display:grid;grid-template-columns:320px 1fr;gap:20px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:18px;box-shadow:0 8px 20px rgba(0,0,0,.04)}
+  .sidebar{padding:16px}
+  .sidebar h2{margin:0 0 8px;font-size:16px}
+  .nav li{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed var(--border);font-size:14px}
+  .nav li:last-child{border-bottom:none}
+  .pill{font-size:12px;border-radius:999px;padding:3px 8px}
+  .done{background:#d1fae5;color:var(--ok)} .todo{background:#e2e8f0;color:#334155}
+  .content{display:grid;gap:18px}
+  .section{padding:18px}
+  .section h3{margin:0 0 10px;font-size:20px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .panel{background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:12px}
+  .muted{color:var(--muted)} .ok{color:var(--ok)} .bad{color:var(--bad)} .warn{color:var(--warn)}
+  .btn{border:1px solid var(--border);background:white;color:#0b1220;border-radius:10px;padding:8px 12px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:white}
+  .btn.flat{background:#eef2ff;border-color:#c7d2fe}
+  .btn.ghost{background:#fff;border-color:#e5e7eb}
+  .btn:disabled{opacity:.6;cursor:not-allowed}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+  .kv{display:flex;justify-content:space-between;font-size:14px;margin:6px 0;color:var(--muted)}
+  input[type="number"], input[type="text"]{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:14px}
+  input[type="range"], select, textarea{width:100%}
+  textarea{min-height:96px}
+  canvas{width:100%;height:340px;border-radius:12px;background:white;border:1px solid var(--border)}
+  details{border:1px dashed var(--border);padding:10px;border-radius:10px;background:#ffffff}
+  summary{cursor:pointer}
+  hr{border:none;border-top:1px dashed var(--border);margin:16px 0}
+  .tutor{position:sticky; top:80px; display:flex; gap:10px; align-items:flex-start; background:#fff; border:1px solid var(--border); border-radius:12px; padding:10px}
+  .tutor .avatar{width:36px;height:36px;border-radius:50%;background:#e0e7ff;display:flex;align-items:center;justify-content:center;font-weight:700;color:#3730a3}
+  .tutor .msg{font-size:14px; color:#0f172a}
+  .tip{font-size:12px;color:#334155;background:#f8fafc;border:1px solid var(--border);padding:6px 8px;border-radius:8px}
+  .badge{font-size:11px;border-radius:6px;padding:2px 6px;background:#ecfeff;color:#0369a1;border:1px solid #bae6fd}
+  .formula{font-size:18px; background:#ffffff; border:1px solid var(--border); padding:8px 12px; border-radius:10px; display:inline-block}
+  .callout{background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12;padding:8px 10px;border-radius:10px;font-size:13px}
+  .annot{font-size:12px;color:#111;background:#e2e8f099;padding:2px 6px;border-radius:6px;border:1px solid #cbd5e1;position:absolute;transform:translate(-50%,-50%)}
+  .rel{position:relative}
+  @media (max-width: 980px){ main{grid-template-columns:1fr} .row{grid-template-columns:1fr} .tutor{position:relative; top:0} }
+</style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>CalcLab • Do Zero ao Cálculo</h1>
+      <div class="tag">Módulo 1 — Álgebra & Funções (Tutor PRO)</div>
+    </div>
+  </header>
+
+  <main>
+    <aside class="sidebar card">
+      <h2>Sua trilha</h2>
+      <ul class="nav">
+        <li><span>1. Álgebra aplicada</span><span id="p-a1" class="pill todo">Pendente</span></li>
+        <li><span>2. Funções: visão geral</span><span id="p-a2" class="pill todo">Pendente</span></li>
+        <li><span>3. Gráficos com explicações</span><span id="p-a3" class="pill todo">Pendente</span></li>
+        <li><span>4. Exercícios guiados</span><span id="p-a4" class="pill todo">Pendente</span></li>
+        <li><span>5. Mini-prova</span><span id="p-a5" class="pill todo">Pendente</span></li>
+      </ul>
+      <div class="tutor">
+        <div class="avatar">T</div>
+        <div class="msg">
+          <b>Seu Tutor</b><br>
+          “Foco no essencial para o Cálculo. Eu explico no gráfico e te dou <u>dicas graduais</u> antes da solução.”
+        </div>
+      </div>
+      <p class="muted" style="margin-top:8px">Progresso salvo automaticamente no navegador.</p>
+    </aside>
+
+    <section class="content">
+
+      <!-- 1. ALGEBRA APLICADA -->
+      <div class="card section">
+        <h3>1) Álgebra aplicada — fundamentos úteis</h3>
+        <div class="row">
+          <div class="panel">
+            <p>Álgebra é a linguagem para manipular <b>relações</b> entre quantidades. Você vai usar isso o tempo todo para entender <i>crescimento/decrescimento</i>, <i>raízes</i>, <i>vértices</i> e <i>assíntotas</i> — todos vitais para limites e derivadas.</p>
+            <details><summary>Produtos notáveis e fatoração (referência)</summary>
+              <div class="formula">\\((a+b)^2=a^2+2ab+b^2\\)</div>
+              <div class="formula">\\((a-b)^2=a^2-2ab+b^2\\)</div>
+              <div class="formula">\\(a^2-b^2=(a-b)(a+b)\\)</div>
+              <div class="formula">\\(ax+ay=a(x+y)\\)</div>
+            </details>
+            <div class="callout">Regra mental: se você consegue <b>fatorar</b> e <b>isolar</b> uma variável, você já está a poucos passos de resolver boa parte dos problemas de cálculo inicial.</div>
+          </div>
+          <div>
+            <div class="panel">
+              <h4>Aquecimento — simplifique</h4>
+              <p>Assuma \\(x\\ne\\pm 3\\). Simplifique:</p>
+              <div class="formula">\\( \\dfrac{x^2-9}{x^2-6x+9} \\)</div>
+              <div class="grid-2" style="margin-top:8px">
+                <input id="warm1" type="text" placeholder="Responda: (x+3)/(x-3)">
+                <div class="grid-3">
+                  <button class="btn" onclick="hintWarm()">Dica</button>
+                  <button class="btn primary" onclick="checkWarm()">Verificar</button>
+                  <button class="btn" onclick="revealWarm()">Ver solução</button>
+                </div>
+              </div>
+              <div id="warm-msg" class="kv"></div>
+              <details id="warm-sol" style="display:none;margin-top:8px"><summary>Solução</summary>
+                <div>Fatorize: \\(x^2-9=(x-3)(x+3)\\) e \\(x^2-6x+9=(x-3)^2\\). Cancela \\((x-3)\\) (com \\(x\\ne 3\\)) e fica \\(\\dfrac{x+3}{x-3}\\).</div>
+              </details>
+            </div>
+            <div style="margin-top:12px">
+              <button class="btn flat" onclick="markDone('a1')">Marcar seção concluída</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. FUNÇÕES OVERVIEW -->
+      <div class="card section">
+        <h3>2) Funções — visão geral e classificação</h3>
+        <div class="row">
+          <div class="panel">
+            <p>Função: a cada \\(x\\) associa-se <b>uma única</b> saída \\(y=f(x)\\). Tipos essenciais para o cálculo:</p>
+            <ul>
+              <li><b>Linear</b> \\(f(x)=mx+b\\) — inclinação \\(m\\), intercepto \\(b\\).</li>
+              <li><b>Quadrática</b> \\(f(x)=ax^2+bx+c\\) — vértice \\(x_v=-\\frac{b}{2a}\\).</li>
+              <li><b>Exponencial</b> \\(f(x)=A\\,e^{kx}+C\\) — assíntota horizontal \\(y=C\\).</li>
+              <li><b>Racional</b> \\(f(x)=\\frac{p(x)}{q(x)}\\) — assíntotas onde \\(q(x)=0\\).</li>
+            </ul>
+          </div>
+          <div>
+            <div class="panel">
+              <h4>Classifique a expressão</h4>
+              <div id="cls-render" class="formula">\\(2x+5\\)</div>
+              <div class="grid-2" style="margin-top:8px">
+                <select id="cls-fn">
+                  <option value="">Escolha o tipo</option>
+                  <option>Linear</option><option>Quadrática</option><option>Racional</option><option>Exponencial</option>
+                </select>
+                <div class="grid-2">
+                  <button class="btn" onclick="hintClass()">Dica</button>
+                  <button class="btn primary" onclick="checkClass()">Verificar</button>
+                </div>
+              </div>
+              <div class="grid-2" style="margin-top:8px">
+                <button class="btn" onclick="newClass()">Novo exemplo</button>
+                <span id="cls-msg" class="kv"></span>
+              </div>
+            </div>
+            <div style="margin-top:12px">
+              <button class="btn flat" onclick="markDone('a2')">Marcar seção concluída</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. GRÁFICOS COM EXPLICAÇÕES -->
+      <div class="card section">
+        <h3>3) Gráficos com explicações (reta, parábola, exponencial)</h3>
+        <p class="muted">Ajuste os controles. Leia as anotações sobre o gráfico — eu explico o que está acontecendo.</p>
+        <div class="row">
+          <!-- Linear -->
+          <div class="panel rel">
+            <h4>Reta \\(y=mx+b\\)</h4>
+            <canvas id="plot-line"></canvas>
+            <div class="annot" id="ann-slope" style="left:60%;top:18%">inclinação \(m\)</div>
+            <div class="annot" id="ann-int" style="left:15%;top:62%">intercepto \(b\)</div>
+            <div class="grid-2" style="margin-top:8px">
+              <label>m <input id="lm" type="range" min="-6" max="6" step="0.1" value="1"></label>
+              <label>b <input id="lb" type="range" min="-10" max="10" step="0.1" value="0"></label>
+            </div>
+            <div id="line-info" class="kv"></div>
+            <details><summary>O que observar?</summary>
+              <ul>
+                <li>Se \(m>0\), cresce; se \(m<0\), decresce.</li>
+                <li>Raiz em \(x=-b/m\) (quando corta o eixo \(x\)).</li>
+              </ul>
+            </details>
+            <hr>
+            <h5>Tarefa (faça a conta): passe pelos pontos \((x_1,y_1)\) e \((x_2,y_2)\)</h5>
+            <div id="line-task"></div>
+            <div class="grid-4" style="margin-top:8px">
+              <label>m = <input id="lt-m" type="number" step="0.01"></label>
+              <label>b = <input id="lt-b" type="number" step="0.01"></label>
+              <button class="btn" onclick="hintLineTask()">Dica</button>
+              <button class="btn primary" onclick="checkLineTask()">Verificar</button>
+            </div>
+            <div id="line-task-msg" class="kv"></div>
+          </div>
+
+          <!-- Quadratic -->
+          <div class="panel rel">
+            <h4>Parábola \\(y=ax^2+bx+c\\)</h4>
+            <canvas id="plot-par"></canvas>
+            <div class="annot" style="left:70%;top:20%">vértice</div>
+            <div class="grid-3" style="margin-top:8px">
+              <label>a <input id="pa" type="range" min="-3" max="3" step="0.1" value="1"></label>
+              <label>b <input id="pb" type="range" min="-5" max="5" step="0.1" value="0"></label>
+              <label>c <input id="pc" type="range" min="-5" max="5" step="0.1" value="0"></label>
+            </div>
+            <div id="par-info" class="kv"></div>
+            <details><summary>O que observar?</summary>
+              <ul>
+                <li>Vértice em \(x_v=-\\frac{b}{2a}\).</li>
+                <li>Abertura: \(a>0\) para cima, \(a<0\) para baixo.</li>
+              </ul>
+            </details>
+            <hr>
+            <h5>Tarefa: defina \(a,b,c\) para que o vértice seja \((h,k)\)</h5>
+            <div id="par-task"></div>
+            <div class="grid-4" style="margin-top:8px">
+              <label>a = <input id="pt-a" type="number" step="0.1"></label>
+              <label>b = <input id="pt-b" type="number" step="0.1"></label>
+              <label>c = <input id="pt-c" type="number" step="0.1"></label>
+              <button class="btn primary" onclick="checkParTask()">Verificar</button>
+            </div>
+            <div id="par-task-msg" class="kv"></div>
+          </div>
+        </div>
+
+        <!-- Exponential row -->
+        <div class="row">
+          <div class="panel rel">
+            <h4>Exponencial \\(y=A\\,e^{kx}+C\\)</h4>
+            <canvas id="plot-exp"></canvas>
+            <div class="annot" style="left:75%;top:30%">assíntota \(y=C\)</div>
+            <div class="grid-3" style="margin-top:8px">
+              <label>A <input id="ea" type="range" min="-5" max="5" step="0.1" value="2"></label>
+              <label>k <input id="ek" type="range" min="-2" max="2" step="0.1" value="0.8"></label>
+              <label>C <input id="ec" type="range" min="-5" max="5" step="0.1" value="0"></label>
+            </div>
+            <div id="exp-info" class="kv"></div>
+            <details><summary>O que observar?</summary>
+              <ul>
+                <li>Se \(k>0\): crescimento; se \(k<0\): decaimento.</li>
+                <li>Assíntota horizontal em \(y=C\).</li>
+              </ul>
+            </details>
+            <hr>
+            <h5>Tarefa: ajuste para que \(g(0)=g_0\) e \(g(1)=g_1\)</h5>
+            <div id="exp-task"></div>
+            <div class="grid-4" style="margin-top:8px">
+              <label>A = <input id="et-A" type="number" step="0.01"></label>
+              <label>k = <input id="et-k" type="number" step="0.01"></label>
+              <label>C = <input id="et-C" type="number" step="0.01"></label>
+              <button class="btn primary" onclick="checkExpTask()">Verificar</button>
+            </div>
+            <div id="exp-task-msg" class="kv"></div>
+          </div>
+          <div class="panel">
+            <h4>Resumo visual</h4>
+            <ul>
+              <li><b>Reta</b>: controlada por \(m\) e \(b\). Taxa de variação <i>constante</i>.</li>
+              <li><b>Parábola</b>: controlada por \(a,b,c\). Curvatura & vértice importam para máximos/mínimos.</li>
+              <li><b>Exponencial</b>: controlada por \(A,k,C\). Base para crescimento/decadência e juros compostos.</li>
+            </ul>
+            <div class="callout">Essas três famílias cobrem 90% do que você precisa para entender limites e derivadas no começo.</div>
+            <div style="margin-top:12px">
+              <button class="btn flat" onclick="markDone('a3')">Marcar seção concluída</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. EXERCÍCIOS GUIADOS -->
+      <div class="card section">
+        <h3>4) Exercícios guiados (com dicas graduais)</h3>
+        <div class="row">
+          <div class="panel">
+            <h4>4.1 Resolver equação racional</h4>
+            <p>Resolva para \\(x\\): \\( \\dfrac{2x+3}{x-1} = 5 \\)</p>
+            <div class="grid-2">
+              <input id="ex1" type="number" placeholder="x = ?">
+              <div class="grid-3">
+                <button class="btn" onclick="hintEx1()">Dica</button>
+                <button class="btn primary" onclick="checkEx1()">Verificar</button>
+                <button class="btn" onclick="solEx1()">Ver solução</button>
+              </div>
+            </div>
+            <div id="ex1-msg" class="kv"></div>
+            <details id="ex1-sol" style="display:none;margin-top:8px"><summary>Solução</summary>
+              <div>Multiplique por \\(x-1\\): \\(2x+3=5(x-1)\\) ⇒ \\(2x+3=5x-5\\) ⇒ \\(-3x=-8\\) ⇒ \\(x=\\tfrac{8}{3}\\). Domínio: \\(x\\ne 1\\).</div>
+            </details>
+          </div>
+          <div class="panel">
+            <h4>4.2 Parâmetros de exponencial</h4>
+            <p>Dada \\(g(x)=A\\,e^{kx}+C\\), com \\(g(0)=7\\) e \\(g(1)=e^2+3\\).</p>
+            <div class="grid-3">
+              <label>A = <input id="ex2A" type="number" step="0.01"></label>
+              <label>k = <input id="ex2k" type="number" step="0.01"></label>
+              <label>C = <input id="ex2C" type="number" step="0.01"></label>
+            </div>
+            <div class="grid-3" style="margin-top:8px">
+              <button class="btn" onclick="hintEx2()">Dica</button>
+              <button class="btn primary" onclick="checkEx2()">Verificar</button>
+              <button class="btn" onclick="solEx2()">Ver solução</button>
+            </div>
+            <div id="ex2-msg" class="kv"></div>
+            <details id="ex2-sol" style="display:none;margin-top:8px"><summary>Solução</summary>
+              <div>\\(g(0)=A+C=7\\) e \\(g(1)=Ae^{k}+C=e^2+3\\). Subtraindo: \\(A(e^{k}-1)=e^2-4\\).
+              Uma escolha simples: \\(C=3\\) ⇒ \\(A=4\\) ⇒ \\(e^{k}=e^2/4\\) ⇒ \\(k=2-\\ln 4\\).</div>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. MINI-PROVA -->
+      <div class="card section">
+        <h3>5) Mini-prova (auto-correção + soluções)</h3>
+        <div id="quiz" class="panel"></div>
+        <div class="grid-2" style="margin-top:8px">
+          <button class="btn" onclick="newQuiz()">Gerar questões</button>
+          <button class="btn primary" onclick="checkQuiz()">Corrigir</button>
+        </div>
+        <div id="quiz-msg" class="kv"></div>
+        <div style="margin-top:12px"><button class="btn flat" onclick="markDone('a5')">Marcar seção concluída</button></div>
+      </div>
+
+    </section>
+  </main>
+
+<script>
+// ======= Utils & Progress =======
+const $ = (s)=>document.querySelector(s);
+function save(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+function load(k,d){ try{ const v = JSON.parse(localStorage.getItem(k)); return v ?? d; }catch{ return d; } }
+function randint(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function typeset(){ if(window.MathJax && MathJax.typesetPromise){ MathJax.typesetPromise(); } }
+
+const prog = load('clab-m1-tutor-pro',{a1:false,a2:false,a3:false,a4:false,a5:false});
+function updatePills(){
+  for(const k of ['a1','a2','a3','a4','a5']){
+    const pill = $('#p-'+k);
+    const done = !!prog[k];
+    pill.className = 'pill '+(done?'done':'todo');
+    pill.textContent = done?'Concluído':'Pendente';
+  }
+}
+function markDone(k){ prog[k]=true; save('clab-m1-tutor-pro',prog); updatePills(); }
+updatePills();
+
+// ======== Warm-up ========
+let warmHints = 0;
+function hintWarm(){
+  warmHints++;
+  const out = $('#warm-msg');
+  if(warmHints===1) out.innerHTML = '<span class="warn">Dica 1: fatorize numerador e denominador.</span>';
+  else if(warmHints===2) out.innerHTML = '<span class="warn">Dica 2: x^2−9=(x−3)(x+3) e x^2−6x+9=(x−3)^2.</span>';
+  else out.innerHTML = '<span class="warn">Agora cancele fatores comuns (x≠±3).</span>';
+}
+function checkWarm(){
+  const v = ($('#warm1').value||'').replace(/\s+/g,'');
+  if(v.toLowerCase() === '(x+3)/(x-3)'){
+    $('#warm-msg').innerHTML = '<span class="ok">Perfeito! ✔</span>'; $('#warm-sol').style.display='none';
+  } else {
+    $('#warm-msg').innerHTML = '<span class="bad">Quase. Tente fatorar e cancelar (atenção ao domínio!).</span>';
+  }
+}
+function revealWarm(){ $('#warm-sol').style.display='block'; }
+
+// ======== Classify function ========
+const examples = [
+  {tex:'2x+5', type:'Linear'},
+  {tex:'x^2-3x+2', type:'Quadrática'},
+  {tex:'\\dfrac{x+1}{x-2}', type:'Racional'},
+  {tex:'A\\,e^{kx}+C', type:'Exponencial'}
+];
+let currentCls = {...examples[0]};
+function setClassExpr(tex){ $('#cls-render').innerHTML = `\\\\(${tex}\\\\)`; typeset(); }
+function newClass(){
+  currentCls = examples[randint(0,examples.length-1)];
+  setClassExpr(currentCls.tex);
+  $('#cls-msg').innerHTML=''; $('#cls-fn').value='';
+}
+newClass();
+function hintClass(){ $('#cls-msg').innerHTML = '<span class="warn">Dica: polinômio grau 1? grau 2? fração de polinômios? expoente linear em x?</span>'; }
+function checkClass(){
+  const pick = $('#cls-fn').value;
+  if(!pick){ $('#cls-msg').innerHTML = '<span class="bad">Escolha um tipo.</span>'; return; }
+  if(pick===currentCls.type){ $('#cls-msg').innerHTML = '<span class="ok">Correto!</span>'; markDone('a2'); }
+  else { $('#cls-msg').innerHTML = '<span class="bad">Não. Compare com os formatos acima.</span>'; }
+}
+
+// ======== Plot helpers ========
+function makePlot(canvas, opts){
+  const ctx = canvas.getContext('2d');
+  const { xmin=-10,xmax=10,ymin=-10,ymax=10 }=opts||{};
+  function clear(){ ctx.clearRect(0,0,canvas.width,canvas.height); }
+  function toXY(x,y){ const w=canvas.width,h=canvas.height;
+    const X=(x-xmin)/(xmax-xmin)*w, Y=h-(y-ymin)/(ymax-ymin)*h; return [X,Y]; }
+  function grid(){
+    ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=1;
+    for(let x=Math.ceil(xmin);x<=xmax;x++){ const [X0,Y0]=toXY(x,ymin),[X1,Y1]=toXY(x,ymax);
+      ctx.beginPath(); ctx.moveTo(X0,Y0); ctx.lineTo(X1,Y1); ctx.stroke(); }
+    for(let y=Math.ceil(ymin);y<=ymax;y++){ const [X0,Y0]=toXY(xmin,y),[X1,Y1]=toXY(xmax,y);
+      ctx.beginPath(); ctx.moveTo(X0,Y0); ctx.lineTo(X1,Y1); ctx.stroke(); }
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=1.5;
+    let [X0,Ya]=toXY(xmin,0),[X1,Yb]=toXY(xmax,0); ctx.beginPath(); ctx.moveTo(X0,Ya); ctx.lineTo(X1,Yb); ctx.stroke();
+    let [Xa,Y0a]=toXY(0,ymin),[Xb,Y1a]=toXY(0,ymax); ctx.beginPath(); ctx.moveTo(Xa,Y0a); ctx.lineTo(Xb,Y1a); ctx.stroke();
+  }
+  function plot(fn, color='#0b1220'){
+    ctx.strokeStyle=color; ctx.lineWidth=2; ctx.beginPath();
+    let f=true; for(let x=xmin;x<=xmax;x+=0.02){ const y=fn(x); const [X,Y]=toXY(x,y);
+      if(f){ ctx.moveTo(X,Y); f=false; } else { ctx.lineTo(X,Y); } }
+    ctx.stroke();
+  }
+  function hline(y){
+    ctx.setLineDash([6,4]); ctx.strokeStyle='#64748b';
+    const [X0,Y0]=toXY(xmin,y),[X1,Y1]=toXY(xmax,y);
+    ctx.beginPath(); ctx.moveTo(X0,Y0); ctx.lineTo(X1,Y1); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  return {clear,grid,plot,toXY,hline,opts:{xmin,xmax,ymin,ymax}};
+}
+function autoresizeCanvas(c){
+  const dpr=window.devicePixelRatio||1, rect=c.getBoundingClientRect();
+  c.width=Math.floor(rect.width*dpr); c.height=Math.floor(rect.height*dpr);
+  c.getContext('2d').setTransform(dpr,0,0,dpr,0,0);
+}
+
+// ======== Linear graph + task ========
+(function(){
+  const c = $('#plot-line'); autoresizeCanvas(c); const plt = makePlot(c,{xmin:-10,xmax:10,ymin:-10,ymax:10});
+  let m = parseFloat($('#lm').value), b = parseFloat($('#lb').value);
+  function redraw(){
+    m = parseFloat($('#lm').value); b = parseFloat($('#lb').value);
+    plt.clear(); plt.grid();
+    plt.plot(x=>m*x+b);
+    const root = (m!==0)?(-b/m).toFixed(2):'—';
+    $('#line-info').innerHTML = `Inclinação m=<b>${m.toFixed(2)}</b>, intercepto b=<b>${b.toFixed(2)}</b>, raiz ≈ <b>${root}</b>`;
+  }
+  for(const id of ['lm','lb']) $('#'+id).addEventListener('input', ()=>{redraw();});
+  window.addEventListener('resize', ()=>{ autoresizeCanvas(c); redraw(); });
+  redraw();
+
+  // Task: fit through two points
+  const P = {x1:randint(-4,4), y1:randint(-5,5), x2:randint(1,5), y2:randint(-5,5)};
+  if(P.x2===P.x1){ P.x2 += 1; }
+  const trueM = (P.y2-P.y1)/(P.x2-P.x1);
+  const trueB = P.y1 - trueM*P.x1;
+  $('#line-task').innerHTML = `Pontos: \\((${P.x1},${P.y1})\\) e \\((${P.x2},${P.y2})\\). Calcule e digite m e b.`;
+  if(window.MathJax){ MathJax.typesetPromise(); }
+  window._linAns = {m:trueM, b:trueB};
+})();
+function hintLineTask(){ $('#line-task-msg').innerHTML = '<span class="warn">Dica: \\(m=\\frac{y_2-y_1}{x_2-x_1}\\). Depois, use \\(b=y_1-mx_1\\).</span>'; if(window.MathJax){ MathJax.typesetPromise(); } }
+function checkLineTask(){
+  const m = parseFloat($('#lt-m').value), b = parseFloat($('#lt-b').value);
+  if([m,b].some(Number.isNaN)){ $('#line-task-msg').innerHTML = '<span class="bad">Preencha m e b.</span>'; return; }
+  const ok = Math.abs(m-window._linAns.m)<1e-6 && Math.abs(b-window._linAns.b)<1e-6;
+  $('#line-task-msg').innerHTML = ok ? '<span class="ok">Correto! ✔</span>' : `<span class="bad">Não bate. Tente refazer a conta.</span>`;
+}
+
+// ======== Parabola graph + task ========
+(function(){
+  const c = $('#plot-par'); autoresizeCanvas(c); const plt = makePlot(c,{xmin:-10,xmax:10,ymin:-10,ymax:10});
+  function redraw(){
+    const a=parseFloat($('#pa').value), b=parseFloat($('#pb').value), c0=parseFloat($('#pc').value);
+    plt.clear(); plt.grid(); plt.plot(x=>a*x*x+b*x+c0);
+    const xv = -b/(2*a); const yv = a*xv*xv+b*xv+c0;
+    $('#par-info').innerHTML = `Vértice ≈ (<b>${isFinite(xv)?xv.toFixed(2):'—'}</b>, <b>${isFinite(yv)?yv.toFixed(2):'—'}</b>), abertura: <b>${a>0?'para cima':'para baixo'}</b>`;
+  }
+  for(const id of ['pa','pb','pc']) $('#'+id).addEventListener('input', redraw);
+  window.addEventListener('resize', ()=>{ autoresizeCanvas(c); redraw(); });
+  redraw();
+
+  // Task: target vertex
+  const target = {h:randint(-3,3), k:randint(-3,3)};
+  $('#par-task').innerHTML = `Queremos vértice em \\((h,k)=(${target.h},${target.k})\\) com \\(a=1\\). Digite \(a,b,c\) do modelo \\(y=ax^2+bx+c\\).`;
+  if(window.MathJax){ MathJax.typesetPromise(); }
+  window._parAns = {a:1, b:-2*target.h, c:target.h*target.h+target.k};
+})();
+function checkParTask(){
+  const a=parseFloat($('#pt-a').value), b=parseFloat($('#pt-b').value), c=parseFloat($('#pt-c').value);
+  if([a,b,c].some(Number.isNaN)){ $('#par-task-msg').innerHTML='<span class="bad">Preencha a, b, c.</span>'; return; }
+  const A=window._parAns;
+  const ok = Math.abs(a-A.a)<1e-6 && Math.abs(b-A.b)<1e-6 && Math.abs(c-A.c)<1e-6;
+  $('#par-task-msg').innerHTML = ok ? '<span class="ok">Correto! ✔</span>' : '<span class="bad">Confira as fórmulas: \(x_v=-b/(2a)\) e \(k=c-b^2/(4a)\).</span>'; if(window.MathJax){ MathJax.typesetPromise(); }
+}
+
+// ======== Exponential graph + task ========
+(function(){
+  const c = $('#plot-exp'); autoresizeCanvas(c); const plt = makePlot(c,{xmin:-6,xmax:6,ymin:-6,ymax:10});
+  function redraw(){
+    const A=parseFloat($('#ea').value), k=parseFloat($('#ek').value), C=parseFloat($('#ec').value);
+    plt.clear(); plt.grid(); plt.hline(C); plt.plot(x=>A*Math.exp(k*x)+C);
+    $('#exp-info').innerHTML = `Assíntota: y=<b>${C.toFixed(2)}</b>; g(0)=<b>${(A+C).toFixed(2)}</b>; tendência: <b>${k>0?'cresce':'decresce'}</b>`;
+  }
+  for(const id of ['ea','ek','ec']) $('#'+id).addEventListener('input', redraw);
+  window.addEventListener('resize', ()=>{ autoresizeCanvas(c); redraw(); });
+  redraw();
+
+  // Task values
+  const g0 = randint(1,6), g1 = randint(2,8);
+  $('#exp-task').innerHTML = `Desejamos \(g(0)=${g0}\) e \(g(1)=${g1}\). Digite um trio \((A,k,C)\) que satisfaça.`;
+  if(window.MathJax){ MathJax.typesetPromise(); }
+  window._expCheck = function(A,k,C){
+    const ok1 = Math.abs(A + C - g0) < 1e-3;
+    const ok2 = Math.abs(A*Math.exp(k) + C - g1) < 1e-3;
+    return ok1 && ok2;
+  };
+})();
+function checkExpTask(){
+  const A=parseFloat($('#et-A').value), k=parseFloat($('#et-k').value), C=parseFloat($('#et-C').value);
+  if([A,k,C].some(Number.isNaN)){ $('#exp-task-msg').innerHTML='<span class="bad">Preencha A, k, C.</span>'; return; }
+  const ok = window._expCheck(A,k,C);
+  $('#exp-task-msg').innerHTML = ok ? '<span class="ok">Conjunto válido ✔</span>' : '<span class="bad">Não bate. Use: g(0)=A+C e g(1)=Ae^{k}+C.</span>'; if(window.MathJax){ MathJax.typesetPromise(); }
+}
+
+// ======== Guided exercises (same as before) ========
+let ex1Hints = 0;
+function hintEx1(){
+  ex1Hints++;
+  const out = $('#ex1-msg');
+  if(ex1Hints===1) out.innerHTML='<span class="warn">Dica 1: multiplique pelos denominadores.</span>';
+  else if(ex1Hints===2) out.innerHTML='<span class="warn">Dica 2: 2x+3 = 5(x−1).</span>';
+  else out.innerHTML='<span class="warn">Dica 3: isole x.</span>';
+}
+function checkEx1(){
+  const v = parseFloat($('#ex1').value);
+  if(Number.isNaN(v)){ $('#ex1-msg').innerHTML='<span class="bad">Digite um valor.</span>'; return; }
+  if(Math.abs(v - (8/3)) < 1e-9){ $('#ex1-msg').innerHTML='<span class="ok">Correto!</span>'; $('#ex1-sol').style.display='none'; markDone('a4'); }
+  else { $('#ex1-msg').innerHTML='<span class="bad">Ainda não. Tente aplicar as dicas.</span>'; }
+}
+function solEx1(){ $('#ex1-sol').style.display='block'; if(window.MathJax){ MathJax.typesetPromise(); } }
+
+let ex2Hints = 0;
+function hintEx2(){
+  ex2Hints++;
+  const out = $('#ex2-msg');
+  if(ex2Hints===1) out.innerHTML='<span class="warn">Dica 1: g(0)=A+C.</span>';
+  else if(ex2Hints===2) out.innerHTML='<span class="warn">Dica 2: g(1)=Ae^{k}+C.</span>';
+  else out.innerHTML='<span class="warn">Dica 3: subtraia as equações.</span>';
+}
+function checkEx2(){
+  const A = parseFloat($('#ex2A').value), k = parseFloat($('#ex2k').value), C = parseFloat($('#ex2C').value);
+  if([A,k,C].some(Number.isNaN)){ $('#ex2-msg').innerHTML='<span class="bad">Preencha A, k e C.</span>'; return; }
+  const ok1 = Math.abs(A + C - 7) < 1e-3;
+  const ok2 = Math.abs(A * Math.exp(k) + C - (Math.exp(2) + 3)) < 1e-3;
+  if(ok1 && ok2){ $('#ex2-msg').innerHTML='<span class="ok">Conjunto válido ✔</span>'; $('#ex2-sol').style.display='none'; markDone('a4'); }
+  else { $('#ex2-msg').innerHTML='<span class="bad">Não bate. Revise as equações.</span>'; }
+}
+function solEx2(){ $('#ex2-sol').style.display='block'; if(window.MathJax){ MathJax.typesetPromise(); } }
+
+// ======== Mini-prova ========
+let QUIZ = [];
+function qLinear(){
+  const a=randint(-6,6)||2; const x=randint(-6,6); const b=randint(-8,8); const c=a*x+b;
+  return {type:'lin', text:`Resolva: ${a}x ${b>=0?'+':''}${b} = ${c}`, answer:x, sol:`${a}x = ${c-b} ⇒ x = ${(c-b)}/${a} = ${x}`};
+}
+function qQuad(){
+  const r1=randint(-5,5), r2=randint(-5,5), a=1, b=-(r1+r2), c=r1*r2;
+  return {type:'quad', text:`Raízes de: x² ${b>=0?'+':''}${b}x ${c>=0?'+':''}${c} = 0`, answer:[Math.min(r1,r2),Math.max(r1,r2)], sol:`Δ=${b*b-4*c}. Raízes: ${Math.min(r1,r2)} e ${Math.max(r1,r2)}.`};
+}
+function qClass(){
+  const ex = examples[randint(0,examples.length-1)];
+  return {type:'cls', text:`Classifique: ${ex.type==='Racional'?'(x+1)/(x-2)':(ex.type==='Exponencial'?'A e^{kx}+C':(ex.type==='Quadrática'?'x^2-3x+2':'2x+5'))}`, answer:ex.type, sol:`Tipo correto: ${ex.type}.`};
+}
+function newQuiz(){
+  QUIZ = [qLinear(), qQuad(), qClass()];
+  const html = QUIZ.map((q,i)=>{
+    if(q.type==='lin'){
+      return `<div style="margin-bottom:10px"><b>Q${i+1}.</b> ${q.text}
+        <div class="grid-2" style="margin-top:6px"><label>x = <input type="number" id="q${i}"></label></div>
+        <details id="s${i}" style="display:none"><summary>Solução</summary><div>${q.sol}</div></details>
+      </div>`;
+    } else if(q.type==='quad'){
+      return `<div style="margin-bottom:10px"><b>Q${i+1}.</b> ${q.text}
+        <div class="grid-3" style="margin-top:6px">
+          <label>raiz 1 (menor) <input type="number" id="q${i}a"></label>
+          <label>raiz 2 (maior) <input type="number" id="q${i}b"></label>
+          <span class="tip">Dica: soma = −b, produto = c</span>
+        </div>
+        <details id="s${i}" style="display:none"><summary>Solução</summary><div>${q.sol}</div></details>
+      </div>`;
+    } else {
+      return `<div style="margin-bottom:10px"><b>Q${i+1}.</b> ${q.text}
+        <div class="grid-2" style="margin-top:6px">
+          <select id="q${i}">
+            <option value=\"\">Escolher…</option>
+            <option>Linear</option><option>Quadrática</option><option>Racional</option><option>Exponencial</option>
+          </select>
+        </div>
+        <details id="s${i}" style="display:none"><summary>Solução</summary><div>${q.sol}</div></details>
+      </div>`;
+    }
+  }).join('');
+  $('#quiz').innerHTML = html;
+  $('#quiz-msg').innerHTML='';
+  if(window.MathJax){ MathJax.typesetPromise(); }
+}
+newQuiz();
+function checkQuiz(){
+  let correct=0;
+  QUIZ.forEach((q,i)=>{
+    if(q.type==='lin'){
+      const v=parseFloat($('#q'+i).value);
+      if(!Number.isNaN(v) && Math.abs(v-q.answer)<1e-9){ correct++; $('#s'+i).style.display='none'; }
+      else { $('#s'+i).style.display='block'; }
+    } else if(q.type==='quad'){
+      const a=parseFloat($('#q'+i+'a').value), b=parseFloat($('#q'+i+'b').value);
+      if(!Number.isNaN(a)&&!Number.isNaN(b)){
+        const R=[Math.min(a,b),Math.max(a,b)];
+        if(Math.abs(R[0]-q.answer[0])<1e-9 && Math.abs(R[1]-q.answer[1])<1e-9){ correct++; $('#s'+i).style.display='none'; }
+        else { $('#s'+i).style.display='block'; }
+      } else { $('#s'+i).style.display='block'; }
+    } else if(q.type==='cls'){
+      const pick = $('#q'+i).value;
+      if(pick===q.answer){ correct++; $('#s'+i).style.display='none'; } else { $('#s'+i).style.display='block'; }
+    }
+  });
+  $('#quiz-msg').innerHTML = `<span class="${correct===QUIZ.length?'ok':(correct>=2?'warn':'bad')}">Acertos: ${correct}/${QUIZ.length}.</span>`;
+}
+</script>
+</body>
+</html>
