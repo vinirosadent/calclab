@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CalcLab — Interactive Calculus Starter (No-Install)</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --panel: #ffffff;
+    --ink: #0f172a;
+    --muted: #475569;
+    --border: #e2e8f0;
+    --accent: #4f46e5;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; color: var(--ink); background: var(--bg); }
+  header { position: sticky; top: 0; backdrop-filter: blur(8px); background: #ffffffcc; border-bottom: 1px solid var(--border); }
+  header .wrap { max-width: 1100px; margin: 0 auto; padding: 12px 16px; display: flex; gap: 12px; align-items: center; }
+  h1 { font-size: 18px; margin: 0; }
+  main { max-width: 1100px; margin: 0 auto; padding: 20px 16px 40px; display: grid; grid-template-columns: 320px 1fr; gap: 20px; }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.02); }
+  .sidebar { padding: 16px; }
+  .sidebar h2 { font-size: 16px; margin: 0 0 10px; }
+  .road li { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 14px; }
+  .road li:last-child { border-bottom: none; }
+  .pill { font-size: 12px; border-radius: 999px; padding: 2px 8px; }
+  .pill.done { background: #d1fae5; color: #065f46; }
+  .pill.todo { background: #e2e8f0; color: #334155; }
+  .tabs { display: flex; gap: 8px; }
+  .tab-btn { border: 1px solid var(--border); background: white; color: #334155; padding: 8px 12px; border-radius: 999px; font-size: 14px; cursor: pointer; }
+  .tab-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .content { display: grid; gap: 16px; }
+  .section { padding: 16px; }
+  .section h3 { margin: 0 0 8px; font-size: 16px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .panel { background: #f1f5f9; border: 1px solid var(--border); border-radius: 12px; padding: 8px; }
+  label { font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; margin: 8px 0 4px; }
+  input[type="range"], input[type="number"], select, textarea { width: 100%; }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  canvas { width: 100%; height: 320px; border-radius: 10px; background: white; border: 1px solid var(--border); }
+  .foot { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .ok { color: #065f46; }
+  .bad { color: #9f1239; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } .row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>CalcLab — Interactive Calculus Starter (No‑Install)</h1>
+      <div class="tabs" id="tabs">
+        <button class="tab-btn active" data-tab="lessons">Lessons</button>
+        <button class="tab-btn" data-tab="lab">Graph Lab</button>
+      </div>
+    </div>
+  </header>
+  <main>
+    <aside class="card sidebar">
+      <h2>Roadmap</h2>
+      <ul class="road">
+        <li><span>Functions 101</span><span id="p-fns" class="pill todo">Pending</span></li>
+        <li><span>Vertical Line Test</span><span id="p-vlt" class="pill todo">Pending</span></li>
+        <li><span>Growth/Decrease</span><span id="p-gro" class="pill todo">Pending</span></li>
+        <li><span>Limits (secant → tangent)</span><span id="p-lim" class="pill todo">Pending</span></li>
+      </ul>
+      <div class="foot">Progresso salvo localmente no seu navegador.</div>
+    </aside>
+
+    <section class="content">
+      <!-- LESSONS -->
+      <div id="view-lessons" class="card section">
+        <h3>Functions 101 • Evaluate & Visualize</h3>
+        <div class="row">
+          <div class="panel">
+            <canvas id="plot-fn"></canvas>
+          </div>
+          <div>
+            <label>Type
+              <select id="fn-type">
+                <option value="linear">Linear: ax + b</option>
+                <option value="quad">Quadratic: ax² + bx + c</option>
+                <option value="expo">Exponential: a·e^(b x) + c</option>
+              </select>
+            </label>
+            <label>x <span id="val-x"></span><input type="range" id="x" min="-5" max="5" step="0.1" value="2"></label>
+            <label>a <span id="val-a"></span><input type="range" id="a" min="-5" max="5" step="0.1" value="2"></label>
+            <label>b <span id="val-b"></span><input type="range" id="b" min="-5" max="5" step="0.1" value="3"></label>
+            <label>c <span id="val-c"></span><input type="range" id="c" min="-10" max="10" step="0.1" value="1"></label>
+            <div class="foot">f(x) = <span id="fn-label">2x + 3</span> • f(<span id="x-show">2.00</span>) ≈ <b id="y-show">7.00</b></div>
+            <div class="hint">Dica: altere tipo e parâmetros e observe o gráfico à esquerda.</div>
+          </div>
+        </div>
+        <hr style="margin:16px 0;border:none;border-top:1px dashed var(--border)">
+        <h3>Vertical Line Test • Is it a function?</h3>
+        <div class="row">
+          <div class="panel"><canvas id="plot-vlt"></canvas></div>
+          <div>
+            <label>x (vertical line) <span id="vlt-xv"></span><input type="range" id="vlt-x" min="-2.5" max="2.5" step="0.05" value="0"></label>
+            <div id="vlt-msg" class="foot"></div>
+          </div>
+        </div>
+        <hr style="margin:16px 0;border:none;border-top:1px dashed var(--border)">
+        <h3>Growth vs Decrease • Quadratic y = a(x-h)² + k</h3>
+        <div class="row">
+          <div class="panel"><canvas id="plot-gro"></canvas></div>
+          <div>
+            <label>a (abre p/ cima/baixo) <span id="g-a"></span><input type="range" id="gA" min="-3" max="3" step="0.1" value="-1"></label>
+            <label>h (vértice x) <span id="g-h"></span><input type="range" id="gH" min="-3" max="3" step="0.1" value="1"></label>
+            <label>k (vértice y) <span id="g-k"></span><input type="range" id="gK" min="-5" max="5" step="0.1" value="4"></label>
+            <div class="foot" id="gro-msg"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LAB -->
+      <div id="view-lab" class="card section" style="display:none">
+        <h3>Limit Explorer • Secant slope → tangent (derivative idea) for f(x)=x²</h3>
+        <div class="row">
+          <div class="panel"><canvas id="plot-lim"></canvas></div>
+          <div>
+            <label>x₀ <span id="lx0"></span><input type="range" id="lx" min="-2" max="2" step="0.1" value="1"></label>
+            <label>h (distance) <span id="lh"></span><input type="range" id="lhh" min="-2" max="2" step="0.1" value="1"></label>
+            <div class="foot">Secant slope ≈ <b id="lslope">?</b> • True derivative at x₀: 2x₀ = <b id="ltrue">?</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<script>
+// --- utilities ---
+const $ = (sel) => document.querySelector(sel);
+function save(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+function load(k, d){ try{ const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch{ return d; } }
+
+// --- simple canvas plotting helpers ---
+function makePlot(canvas, opts){
+  const ctx = canvas.getContext('2d');
+  const { xmin=-5, xmax=5, ymin=-5, ymax=5 } = opts || {};
+  function clear(){ ctx.clearRect(0,0,canvas.width,canvas.height); }
+  function toXY(x,y){
+    const w=canvas.width, h=canvas.height;
+    const X = (x - xmin) / (xmax - xmin) * w;
+    const Y = h - (y - ymin) / (ymax - ymin) * h;
+    return [X,Y];
+  }
+  function grid(){
+    // axes
+    ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1;
+    // vertical grid
+    for(let x=Math.ceil(xmin); x<=xmax; x++){
+      const [X0,Y0] = toXY(x, ymin), [X1,Y1] = toXY(x, ymax);
+      ctx.beginPath(); ctx.moveTo(X0,Y0); ctx.lineTo(X1,Y1); ctx.stroke();
+    }
+    // horizontal grid
+    for(let y=Math.ceil(ymin); y<=ymax; y++){
+      const [X0,Y0] = toXY(xmin, y), [X1,Y1] = toXY(xmax, y);
+      ctx.beginPath(); ctx.moveTo(X0,Y0); ctx.lineTo(X1,Y1); ctx.stroke();
+    }
+    // axes bold
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1.5;
+    const [X0,Ya] = toXY(xmin,0), [X1,Yb] = toXY(xmax,0);
+    const [Xa,Y0a] = toXY(0,ymin), [Xb,Y1a] = toXY(0,ymax);
+    ctx.beginPath(); ctx.moveTo(X0,Ya); ctx.lineTo(X1,Yb); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(Xa,Y0a); ctx.lineTo(Xb,Y1a); ctx.stroke();
+  }
+  function polyline(points){
+    if(points.length<2) return;
+    ctx.strokeStyle = '#1f2937'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    let first=true;
+    for(const p of points){
+      const [X,Y]=toXY(p.x,p.y);
+      if(first){ ctx.moveTo(X,Y); first=false; } else { ctx.lineTo(X,Y); }
+    }
+    ctx.stroke();
+  }
+  function dots(points){
+    ctx.fillStyle = '#1f2937';
+    for(const p of points){
+      const [X,Y]=toXY(p.x,p.y);
+      ctx.beginPath(); ctx.arc(X,Y,3,0,Math.PI*2); ctx.fill();
+    }
+  }
+  function vline(x){
+    ctx.strokeStyle = '#4b5563'; ctx.setLineDash([6,4]);
+    const [X0,Y0]=toXY(x, ymin), [X1,Y1]=toXY(x, ymax);
+    ctx.beginPath(); ctx.moveTo(X0,Y0); ctx.lineTo(X1,Y1); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  function hline(y){
+    ctx.strokeStyle = '#4b5563'; ctx.setLineDash([6,4]);
+    const [X0,Y0]=toXY(xmin, y), [X1,Y1]=toXY(xmax, y);
+    ctx.beginPath(); ctx.moveTo(X0,Y0); ctx.lineTo(X1,Y1); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  function circle(cx,cy,r){
+    ctx.strokeStyle = '#1f2937'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    for(let t=0;t<=Math.PI*2+0.01;t+=0.02){
+      const x = cx + r*Math.cos(t), y = cy + r*Math.sin(t);
+      const [X,Y]=toXY(x,y);
+      if(t===0) ctx.moveTo(X,Y); else ctx.lineTo(X,Y);
+    }
+    ctx.stroke();
+  }
+  return { ctx, clear, grid, polyline, dots, vline, hline, circle, toXY, opts:{xmin,xmax,ymin,ymax} };
+}
+
+function autoresizeCanvas(c){
+  const dpr = window.devicePixelRatio || 1;
+  const rect = c.getBoundingClientRect();
+  c.width = Math.floor(rect.width * dpr);
+  c.height = Math.floor(rect.height * dpr);
+  const ctx = c.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+
+// --- tabs ---
+const tabs = $('#tabs');
+tabs.addEventListener('click', (e)=>{
+  const btn = e.target.closest('button'); if(!btn) return;
+  for(const b of tabs.querySelectorAll('button')) b.classList.remove('active');
+  btn.classList.add('active');
+  const t = btn.dataset.tab;
+  $('#view-lessons').style.display = (t==='lessons')?'block':'none';
+  $('#view-lab').style.display = (t==='lab')?'block':'none';
+});
+
+// --- state (progress) ---
+const progress = load('clab-progress', { fns:false, vlt:false, gro:false, lim:false });
+function updatePills(){
+  $('#p-fns').className = 'pill ' + (progress.fns?'done':'todo');
+  $('#p-fns').textContent = progress.fns?'Done':'Pending';
+  $('#p-vlt').className = 'pill ' + (progress.vlt?'done':'todo');
+  $('#p-vlt').textContent = progress.vlt?'Done':'Pending';
+  $('#p-gro').className = 'pill ' + (progress.gro?'done':'todo');
+  $('#p-gro').textContent = progress.gro?'Done':'Pending';
+  $('#p-lim').className = 'pill ' + (progress.lim?'done':'todo');
+  $('#p-lim').textContent = progress.lim?'Done':'Pending';
+}
+updatePills();
+
+// --- Functions 101 ---
+(function(){
+  const c = $('#plot-fn'); autoresizeCanvas(c);
+  const plt = makePlot(c, { xmin:-5, xmax:5, ymin:-10, ymax:10 });
+  const typeSel = $('#fn-type');
+  const xr = $('#x'), ar = $('#a'), br = $('#b'), cr = $('#c');
+  const xShow = $('#x-show'), yShow = $('#y-show'), lab = $('#fn-label');
+  const valx = $('#val-x'), vala = $('#val-a'), valb = $('#val-b'), valc = $('#val-c');
+
+  function f(x){
+    const a = +ar.value, b = +br.value, c = +cr.value;
+    if(typeSel.value==='linear') return a*x + b;
+    if(typeSel.value==='quad') return a*x*x + b*x + c;
+    return a * Math.exp(b*x) + c;
+  }
+  function label(){
+    const a = (+ar.value).toFixed(2), b=(+br.value).toFixed(2), c=(+cr.value).toFixed(2);
+    if(typeSel.value==='linear') return `${a}x + ${b}`;
+    if(typeSel.value==='quad') return `${a}x² + ${b}x + ${c}`;
+    return `${a}·e^(${b}x) + ${c}`;
+  }
+  function redraw(){
+    plt.clear(); plt.grid();
+    const pts = [];
+    for(let x=-5;x<=5;x+=0.05) pts.push({x, y:f(x)});
+    plt.polyline(pts);
+    plt.vline(+xr.value); plt.hline(0);
+    const xv = (+xr.value).toFixed(2); const yv = f(+xr.value).toFixed(4);
+    xShow.textContent = xv; yShow.textContent = yv; lab.textContent = label();
+    valx.textContent = xr.value; vala.textContent = ar.value; valb.textContent = br.value; valc.textContent = cr.value;
+    progress.fns = true; save('clab-progress', progress); updatePills();
+  }
+  for(const el of [typeSel,xr,ar,br,cr]) el.addEventListener('input', redraw);
+  window.addEventListener('resize', ()=>{ autoresizeCanvas(c); redraw(); });
+  redraw();
+})();
+
+// --- Vertical Line Test ---
+(function(){
+  const c = $('#plot-vlt'); autoresizeCanvas(c);
+  const plt = makePlot(c, { xmin:-3, xmax:3, ymin:-3, ymax:3 });
+  const xr = $('#vlt-x'); const out = $('#vlt-msg'); const xv = $('#vlt-xv');
+
+  function redraw(){
+    plt.clear(); plt.grid();
+    plt.circle(0,0,2);
+    const x = +xr.value; xv.textContent = x.toFixed(2);
+    plt.vline(x);
+    let msg = ''; let cls='ok';
+    if(Math.abs(x) < 2){ msg = 'Intersections: 2 → NÃO é função (falha no teste da reta vertical).'; cls='bad'; }
+    else if(Math.abs(x) === 2){ msg = 'Intersections: 1 (tangente).'; }
+    else { msg = 'Intersections: 0.'; }
+    out.textContent = msg; out.className = 'foot ' + cls;
+    progress.vlt = true; save('clab-progress', progress); updatePills();
+  }
+  xr.addEventListener('input', redraw);
+  window.addEventListener('resize', ()=>{ autoresizeCanvas(c); redraw(); });
+  redraw();
+})();
+
+// --- Growth vs Decrease ---
+(function(){
+  const c = $('#plot-gro'); autoresizeCanvas(c);
+  const plt = makePlot(c, { xmin:-5, xmax:5, ymin:-10, ymax:10 });
+  const aR=$('#gA'), hR=$('#gH'), kR=$('#gK');
+  const aL=$('#g-a'), hL=$('#g-h'), kL=$('#g-k');
+  const msg=$('#gro-msg');
+  function q(x){ const a=+aR.value,h=+hR.value,k=+kR.value; return a*(x-h)*(x-h)+k; }
+  function redraw(){
+    plt.clear(); plt.grid();
+    const pts=[]; for(let x=-5;x<=5;x+=0.05) pts.push({x,y:q(x)});
+    plt.polyline(pts); plt.vline(+hR.value);
+    aL.textContent=aR.value; hL.textContent=hR.value; kL.textContent=kR.value;
+    const a=+aR.value, h=+hR.value;
+    const inc = a<0 ? `(-∞, ${h})` : `(${h}, ∞)`;
+    const dec = a<0 ? `(${h}, ∞)` : `(-∞, ${h})`;
+    msg.innerHTML = `Vértice em x = <b>${h}</b>. Increase: <b>${inc}</b>; Decrease: <b>${dec}</b>.`;
+    progress.gro = true; save('clab-progress', progress); updatePills();
+  }
+  for(const el of [aR,hR,kR]) el.addEventListener('input', redraw);
+  window.addEventListener('resize', ()=>{ autoresizeCanvas(c); redraw(); });
+  redraw();
+})();
+
+// --- Limit Explorer (secant) ---
+(function(){
+  const c = $('#plot-lim'); autoresizeCanvas(c);
+  const plt = makePlot(c, { xmin:-3, xmax:3, ymin:-1, ymax:10 });
+  const xr=$('#lx'), hr=$('#lhh'), outS=$('#lslope'), outT=$('#ltrue'), showx=$('#lx0'), showh=$('#lh');
+  function f(x){ return x*x; }
+  function redraw(){
+    plt.clear(); plt.grid();
+    const pts=[]; for(let x=-3;x<=3;x+=0.02) pts.push({x,y:f(x)});
+    plt.polyline(pts);
+    let x0 = +xr.value, h = +hr.value;
+    if(Math.abs(h) < 0.01) h = h>=0 ? 0.01 : -0.01; // evita divisão por zero
+    const x1 = x0 + h;
+    // secant line slope
+    const slope = (f(x1)-f(x0))/(x1-x0);
+    // draw secant line across domain
+    const y_at = (x)=> f(x0) + slope*(x - x0);
+    const ln=[]; for(let x=-3;x<=3;x+=0.02) ln.push({x,y:y_at(x)});
+    plt.polyline(ln);
+    plt.vline(x0); plt.vline(x1);
+    showx.textContent=x0.toFixed(2); showh.textContent=h.toFixed(2);
+    outS.textContent=slope.toFixed(2); outT.textContent=(2*x0).toFixed(2);
+    progress.lim = true; save('clab-progress', progress); updatePills();
+  }
+  for(const el of [xr,hr]) el.addEventListener('input', redraw);
+  window.addEventListener('resize', ()=>{ autoresizeCanvas(c); redraw(); });
+  redraw();
+})();
+</script>
+</body>
+</html>
